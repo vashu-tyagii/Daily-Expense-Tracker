@@ -14,11 +14,6 @@ Daily-Expense-Tracker/
 ├── data/
 │   └── database.py         # Persistent storage for expense records
 │
-├── src/
-│   ├── __init__.py            # Package initialization & import gateway
-│   ├── tracker.py             # Core business logic (add, calculate, format)
-│   └── utils.py               # Custom exceptions & input validation rules
-│
 ├── main.py                    # Application entry point (Streamlit app)
 └── README.md                  # Project documentation
 
