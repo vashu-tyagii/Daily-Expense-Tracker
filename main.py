@@ -19,17 +19,23 @@ with st.container(border=True):
     left_column, middle_column, right_column = st.columns(3)
 
 # defining content of first col
+    df = db.get_expense()
     with left_column:
         with st.container(border=True):
-            st.subheader('Total Expense')
+            total = df.expense_amount.sum() if not df.empty else 0
+            st.metric('Total Expense', f'₹{total}')
 
     with middle_column:
         with st.container(border=True):
-            st.subheader('Total Expense By CASH')
+            total_CASH = df.loc[df['payment_type'].eq(
+                'CASH'), 'expense_amount'].sum() if not df.empty else 0
+            st.metric('Total CASH Expense', f'₹{total_CASH}')
 
     with right_column:
         with st.container(border=True):
-            st.subheader('Total Expense By UPI')
+            total_UPI = df.loc[df['payment_type'].eq(
+                'UPI'), 'expense_amount'].sum() if not df.empty else 0
+            st.metric('Total UPI Expense', f'₹{total_UPI}')
 st.divider()
 
 with st.container(border=True):
@@ -58,7 +64,7 @@ if st.button("INSERT DATA", use_container_width=True):
     if not NAME.strip():
         st.error('EXPENSE ITEM NAME IS REQUIRED')
         st.stop()
-    db.insert_expense(NAME,DATE,TYPE,AMOUNT)  # type: ignore
+    db.insert_expense(NAME, DATE, TYPE, AMOUNT)  # type: ignore
     st.success('Data SuccessFully Inserted !!')
 st.divider()
 
