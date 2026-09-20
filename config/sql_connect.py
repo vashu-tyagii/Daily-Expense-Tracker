@@ -15,5 +15,5 @@ host = os.getenv("MYSQL_HOST")
 port = int(os.getenv("MYSQL_PORT", 3306))
 database = os.getenv("MYSQL_DB")
 
-db_url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}"
-engine = create_engine(db_url)
+engine = create_engine("sqlite:///expenses.db", echo=True)
+

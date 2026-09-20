@@ -29,15 +29,15 @@ def use_db():
 
 def create_table():
     """Create the expenses table if it does not already exist."""
-    create_table_sql = '''
+    create_table_sql = """
         CREATE TABLE IF NOT EXISTS expense (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        expense_name VARCHAR(255) NOT NULL,
-        expense_date DATE DEFAULT (CURRENT_DATE),
-        payment_type VARCHAR(20) DEFAULT 'CASH' CHECK (payment_type IN ('CASH', 'UPI')),
-        expense_amount DECIMAL(10, 2) NOT NULL
-  );
-  '''
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        expense_name TEXT NOT NULL,
+        expense_date TEXT DEFAULT CURRENT_DATE,
+        payment_type TEXT DEFAULT 'CASH',
+        expense_amount REAL NOT NULL
+);
+"""
     with engine.connect() as connection:
         connection.exec_driver_sql(create_table_sql)
         connection.commit()
