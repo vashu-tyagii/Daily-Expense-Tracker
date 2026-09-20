@@ -20,30 +20,25 @@ from config.sql_connect import engine # type:ignore
 # ==============================================================
 
 
-def use_db():
-    """Select the expense tracker database for the current connection."""
-    use_db = 'USE expense_tracker ;'
-    with engine.connect() as connection:
-        connection.exec_driver_sql(use_db)
-
-
 def create_table():
     """Create the expenses table if it does not already exist."""
-    create_table_sql = """
+    create_table_sql = text("""
         CREATE TABLE IF NOT EXISTS expense (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        expense_name TEXT NOT NULL,
-        expense_date TEXT DEFAULT CURRENT_DATE,
-        payment_type TEXT DEFAULT 'CASH',
-        expense_amount REAL NOT NULL
-);
-"""
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            expense_name TEXT NOT NULL,
+            expense_date TEXT DEFAULT CURRENT_DATE,
+            payment_type TEXT DEFAULT 'CASH',
+            expense_amount REAL NOT NULL
+        );
+    """)
     with engine.connect() as connection:
-        connection.exec_driver_sql(create_table_sql)
+        connection.execute(create_table_sql)
         connection.commit()
+
 
 def get_expense():
     """Fetches all expense records from the database as a Pandas DataFrame."""
+    create_table()  # Ensure table exists before querying
     query = "SELECT * FROM expense;"
     df = pd.read_sql(query, con=engine)
     return df
@@ -53,13 +48,12 @@ def insert_expense(
     name: str, date: str, payment_type: str, amount: float
 ) -> None:
     """Insert an expense record into the database."""
-    insert_data = text(
-        """
+    create_table()  # Ensure table exists before inserting
+    insert_data = text("""
         INSERT INTO expense
             (expense_name, expense_date, payment_type, expense_amount)
         VALUES (:name, :date, :payment_type, :amount)
-        """
-    )
+    """)
     with engine.begin() as connection:
         connection.execute(
             insert_data,
@@ -70,4 +64,3 @@ def insert_expense(
                 "amount": amount,
             },
         )
-

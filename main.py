@@ -64,6 +64,7 @@ if st.button("INSERT DATA", use_container_width=True):
     if not NAME.strip():
         st.error('EXPENSE ITEM NAME IS REQUIRED')
         st.stop()
+    formatted_date = DATE.strftime("%Y-%m-%d")
     db.insert_expense(NAME, DATE, TYPE, AMOUNT)  # type: ignore
     st.success('Data SuccessFully Inserted !!')
 st.divider()
